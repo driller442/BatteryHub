@@ -1,5 +1,3 @@
 __pycache__/
-*.pyc
-venv/
 battery_log.csv
-config.json
+*.OLD
