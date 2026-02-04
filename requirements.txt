@@ -1,3 +1,4 @@
-bleak>=0.21.0
+﻿bleak>=0.21.0
+bleak-retry-connector>=3.1.0
 flask>=3.0.0
 pandas>=2.0.0
