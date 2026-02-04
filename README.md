@@ -4,7 +4,7 @@
 
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![BMS Support](https://img.shields.io/badge/BMS-JBD%20%7C%20Daly%20%7C%20ANT-green.svg)](https://github.com/driller442/BatteryHub)
+[![BMS Support](https://img.shields.io/badge/BMS-JBD%20%7C%20Daly%20%7C%20ANT-green.svg)](https://github.com/driller44/batteryhub)
 
 > 🎯 **Monitor your battery in real-time with a beautiful web dashboard!**
 
@@ -21,7 +21,7 @@
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/driller442/BatteryHub.git
+git clone https://github.com/driller44/batteryhub.git
 cd BatteryHub
 pip install -r requirements.txt
 python monitor.py
