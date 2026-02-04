@@ -86,3 +86,25 @@ If BatteryHub is useful to you:
 🤝 Contribute code or documentation
 
 Made with ❤️ for the DIY solar and battery enthusiast community
+
+---
+
+## ?? Platform-Specific Bluetooth Notes
+
+### Docker Deployment
+
+**Windows/macOS:**
+- ?? Bluetooth is NOT accessible in Docker containers
+- Web interface loads but shows "Disconnected" status  
+- **Solution**: Run natively with `python monitor.py` for development
+
+**Linux/Raspberry Pi:**
+- ? Full Bluetooth support in Docker
+- **Recommended** for 24/7 production monitoring
+- Deploy on a Raspberry Pi placed near your battery bank
+
+### Native Python
+
+- ? Full Bluetooth support on all platforms (Windows/Linux/macOS)
+- Best for development and local testing
+- Run with: `python monitor.py`
