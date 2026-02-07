@@ -176,7 +176,7 @@ def load_last_reading():
     global latest_data
     if os.path.exists(LOG_FILE):
         try:
-            df = pd.read_csv(LOG_FILE)
+            df = pd.read_csv(LOG_FILE, names=['timestamp', 'voltage', 'current', 'soc', 'capacity_ah', 'cycles', 'temp', 'power'])
             if len(df) > 0:
                 last = df.iloc[-1]
                 power = last.get('Power', 0) if 'Power' in df.columns else 0
@@ -207,31 +207,36 @@ def index():
 def api_latest():
     return jsonify(latest_data)
 
+@app.route('/api/history/<int:hours>')
+def api_history(hours):
+    """Historical data endpoint"""
+    return api_data(hours)
+
 @app.route('/api/data')
-def api_data():
+def api_data(hours=None):
     hours = request.args.get('hours', type=int, default=24)
     if not os.path.exists(LOG_FILE):
         return Response(json.dumps({'timestamps':[],'voltage':[],'current':[],'soc':[],'power':[],'temp':[]}), mimetype='application/json')
     try:
-        df = pd.read_csv(LOG_FILE)
+        df = pd.read_csv(LOG_FILE, names=['timestamp', 'voltage', 'current', 'soc', 'capacity_ah', 'cycles', 'temp', 'power'])
         # FIXED: Clean data before sending
         df = df.replace([np.inf, -np.inf], np.nan)
-        df['Temp1'] = df['Temp1'].fillna(12.7)
-        df['Power'] = df.get('Power', 0).fillna(0) if 'Power' in df.columns else 0
+        # Temperature fillna removed - use actual values
+        df['power'] = df.get('Power', 0).fillna(0) if 'Power' in df.columns else 0
         
-        df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
         if hours > 0:
             cutoff = datetime.now() - pd.Timedelta(hours=hours)
-            df = df[df['Timestamp'] >= cutoff]
+            df = df[df['timestamp'] >= cutoff]
         
-        power_data = df['Power'].tolist() if 'Power' in df.columns else [0] * len(df)
-        temp_data = df['Temp1'].tolist() if 'Temp1' in df.columns else [12.7] * len(df)
+        power_data = df['power'].tolist() if 'Power' in df.columns else [0] * len(df)
+        temp_data = df['temp'].tolist() if 'temp' in df.columns else [12.7] * len(df)
         
         result = {
-            'timestamps': df['Timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S').tolist(),
-            'voltage': df['Voltage'].tolist(),
-            'current': df['Current'].tolist(),
-            'soc': df['SOC'].tolist(),
+            'timestamps': df['timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S').tolist(),
+            'voltage': df['voltage'].tolist(),
+            'current': df['current'].tolist(),
+            'soc': df['soc'].tolist(),
             'power': power_data,
             'temp': temp_data
         }
